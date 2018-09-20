@@ -2,7 +2,14 @@
 Parser for Financial SWIFT Messages
 SWIFT = Society for Worldwide Interbank Financial Telecommunication
 
+
+
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+
+*********************** TO BE UPDATED START***************************
 
 [![Codacy grade](https://img.shields.io/codacy/grade/d4e120eafc4341aabe1a474aa17008b6.svg)](https://www.codacy.com/app/bengt-brodersen/banking-swift-messages-java)
 
@@ -15,6 +22,12 @@ SWIFT = Society for Worldwide Interbank Financial Telecommunication
 ### Releases
 
 [![Release](https://jitpack.io/v/qoomon/banking-swift-messages-java.svg)](https://jitpack.io/#qoomon/banking-swift-messages-java)
+
+*********************** TO BE UPDATED END***************************
+
+
+
+
 
 
 Support for MT490 and MT942 so far.
