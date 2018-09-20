@@ -23,10 +23,10 @@ public class ApplicationHeaderBlockTest {
 
         // Then
         assertThat(block).isNotNull();
-        assertThat(block.getOutput()).isPresent();
-        if (block.getOutput().isPresent()) {
+        assertThat(block.getOutput()).isNotNull();
+        if (block.getOutput() != null) {
             SoftAssertions softly = new SoftAssertions();
-            ApplicationHeaderOutputBlock outputBlock = block.getOutput().get();
+            ApplicationHeaderOutputBlock outputBlock = block.getOutput();
             softly.assertThat(outputBlock.getMessageType()).isEqualTo("940");
             softly.assertThat(outputBlock.getInputDateTime()).isEqualTo(LocalDateTime.of(2011, 8, 4, 15, 6));
             softly.assertThat(outputBlock.getInputReference()).isEqualTo("LRLRXXXX4A11");
@@ -37,7 +37,7 @@ public class ApplicationHeaderBlockTest {
             softly.assertAll();
         }
 
-        assertThat(block.getInput()).isNotPresent();
+        assertThat(block.getInput()).isNull();
     }
 
 
@@ -52,19 +52,19 @@ public class ApplicationHeaderBlockTest {
 
         // Then
         assertThat(block).isNotNull();
-        assertThat(block.getInput()).isPresent();
-        if (block.getInput().isPresent()) {
+        assertThat(block.getInput()).isNotNull();
+        if (block.getInput() != null) {
             SoftAssertions softly = new SoftAssertions();
-            ApplicationHeaderInputBlock inputBlock = block.getInput().get();
+            ApplicationHeaderInputBlock inputBlock = block.getInput();
             softly.assertThat(inputBlock.getMessageType()).isEqualTo("101");
             softly.assertThat(inputBlock.getReceiverAddress()).isEqualTo("YOURBANKXJKL");
             softly.assertThat(inputBlock.getMessagePriority()).isEqualTo(MessagePriority.URGENT);
-            softly.assertThat(inputBlock.getDeliveryMonitoring()).contains("3");
-            softly.assertThat(inputBlock.getObsolescencePeriod()).contains("003");
+            softly.assertThat(inputBlock.getDeliveryMonitoring()).isEqualTo("3");
+            softly.assertThat(inputBlock.getObsolescencePeriod()).isEqualTo("003");
             softly.assertAll();
         }
 
-        assertThat(block.getOutput()).isNotPresent();
+        assertThat(block.getOutput()).isNull();
     }
 
     @Test

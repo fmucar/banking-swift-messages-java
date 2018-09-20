@@ -1,6 +1,6 @@
 package com.qoomon.banking.swift.submessage.mt942;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.submessage.PageSeparator;
 import com.qoomon.banking.swift.submessage.field.*;
 import com.qoomon.banking.swift.submessage.field.subfield.DebitCreditMark;
@@ -9,7 +9,7 @@ import org.joda.money.CurrencyUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static com.qoomon.banking.swift.submessage.field.FieldUtils.*;
+import static com.qoomon.banking.swift.submessage.field.FieldUtils.swiftTextOf;
 
 /**
  *
@@ -26,7 +26,7 @@ public class MT942Page {
     /**
      * @see RelatedReference#FIELD_TAG_21
      */
-    private final Optional<RelatedReference> relatedReference;
+    private final RelatedReference relatedReference;
 
     /**
      * @see AccountIdentification#FIELD_TAG_25
@@ -62,17 +62,17 @@ public class MT942Page {
     /**
      * @see TransactionSummary#FIELD_TAG_90D
      */
-    private final Optional<TransactionSummary> transactionSummaryDebit;
+    private final TransactionSummary transactionSummaryDebit;
 
     /**
      * @see TransactionSummary#FIELD_TAG_90C
      */
-    private final Optional<TransactionSummary> transactionSummaryCredit;
+    private final TransactionSummary transactionSummaryCredit;
 
     /**
      * @see InformationToAccountOwner#FIELD_TAG_86
      */
-    private final Optional<InformationToAccountOwner> informationToAccountOwner;
+    private final InformationToAccountOwner informationToAccountOwner;
 
 
     public MT942Page(
@@ -92,12 +92,12 @@ public class MT942Page {
         Preconditions.checkArgument(accountIdentification != null, "accountIdentification can't be null");
         Preconditions.checkArgument(statementNumber != null, "statementNumber can't be null");
         Preconditions.checkArgument(floorLimitIndicatorDebit != null, "floorLimitIndicatorDebit can't be null");
-        if (floorLimitIndicatorDebit != null && floorLimitIndicatorDebit.getDebitCreditMark().isPresent()) {
-            DebitCreditMark debitCreditMark = floorLimitIndicatorDebit.getDebitCreditMark().get();
+        if (floorLimitIndicatorDebit.getDebitCreditMark() != null) {
+            DebitCreditMark debitCreditMark = floorLimitIndicatorDebit.getDebitCreditMark();
             Preconditions.checkArgument(debitCreditMark == DebitCreditMark.DEBIT, "floorLimitIndicatorDebit type can't " + debitCreditMark);
         }
-        if (floorLimitIndicatorCredit != null && floorLimitIndicatorCredit.getDebitCreditMark().isPresent()) {
-            DebitCreditMark debitCreditMark = floorLimitIndicatorCredit.getDebitCreditMark().get();
+        if (floorLimitIndicatorCredit != null && floorLimitIndicatorCredit.getDebitCreditMark() != null) {
+            DebitCreditMark debitCreditMark = floorLimitIndicatorCredit.getDebitCreditMark();
             Preconditions.checkArgument(debitCreditMark == DebitCreditMark.CREDIT, "floorLimitIndicatorCredit type can't " + debitCreditMark);
         }
         Preconditions.checkArgument(dateTimeIndicator != null, "dateTimeIndicator can't be null");
@@ -108,46 +108,46 @@ public class MT942Page {
         CurrencyUnit statementCurrency = floorLimitIndicatorDebit.getAmount().getCurrencyUnit();
         String statementFundsCode = statementCurrency.getCode().substring(2, 3);
 
-        if(floorLimitIndicatorCredit != null){
+        if (floorLimitIndicatorCredit != null) {
             CurrencyUnit currency = floorLimitIndicatorCredit.getAmount().getCurrencyUnit();
             Preconditions.checkArgument(currency.equals(statementCurrency), "floorLimitCreditCurrency '" + currency + "' does not match statement currency'" + statementCurrency + "'");
         }
 
         for (TransactionGroup transactionGroup : transactionGroupList) {
-            if (transactionGroup.getStatementLine().getFundsCode().isPresent()){
-                String fundsCode = transactionGroup.getStatementLine().getFundsCode().get();
+            if (transactionGroup.getStatementLine().getFundsCode() != null) {
+                String fundsCode = transactionGroup.getStatementLine().getFundsCode();
                 Preconditions.checkArgument(fundsCode.equals(statementFundsCode), "statementLineFundsCode '" + fundsCode + "' does not match statement currency'" + statementCurrency + "'");
             }
         }
 
-        if(transactionSummaryDebit != null){
+        if (transactionSummaryDebit != null) {
             CurrencyUnit currency = transactionSummaryDebit.getAmount().getCurrencyUnit();
             Preconditions.checkArgument(currency.equals(statementCurrency), "transactionSummaryDebitCurrency '" + currency + "' does not match statement currency'" + statementCurrency + "'");
         }
 
-        if(transactionSummaryCredit != null){
+        if (transactionSummaryCredit != null) {
             CurrencyUnit currency = transactionSummaryCredit.getAmount().getCurrencyUnit();
             Preconditions.checkArgument(currency.equals(statementCurrency), "transactionSummaryCreditCurrency '" + currency + "' does not match statement currency'" + statementCurrency + "'");
         }
 
         this.transactionReferenceNumber = transactionReferenceNumber;
-        this.relatedReference = Optional.ofNullable(relatedReference);
+        this.relatedReference = relatedReference;
         this.accountIdentification = accountIdentification;
         this.statementNumber = statementNumber;
         this.floorLimitIndicatorDebit = floorLimitIndicatorDebit;
         this.floorLimitIndicatorCredit = Optional.ofNullable(floorLimitIndicatorCredit).orElse(floorLimitIndicatorDebit);
         this.dateTimeIndicator = dateTimeIndicator;
         this.transactionGroupList = transactionGroupList;
-        this.transactionSummaryDebit = Optional.ofNullable(transactionSummaryDebit);
-        this.transactionSummaryCredit = Optional.ofNullable(transactionSummaryCredit);
-        this.informationToAccountOwner = Optional.ofNullable(informationToAccountOwner);
+        this.transactionSummaryDebit = transactionSummaryDebit;
+        this.transactionSummaryCredit = transactionSummaryCredit;
+        this.informationToAccountOwner = informationToAccountOwner;
     }
 
     public TransactionReferenceNumber getTransactionReferenceNumber() {
         return transactionReferenceNumber;
     }
 
-    public Optional<RelatedReference> getRelatedReference() {
+    public RelatedReference getRelatedReference() {
         return relatedReference;
     }
 
@@ -175,23 +175,23 @@ public class MT942Page {
         return transactionGroupList;
     }
 
-    public Optional<InformationToAccountOwner> getInformationToAccountOwner() {
+    public InformationToAccountOwner getInformationToAccountOwner() {
         return informationToAccountOwner;
     }
 
-    public Optional<TransactionSummary> getTransactionSummaryDebit() {
+    public TransactionSummary getTransactionSummaryDebit() {
         return transactionSummaryDebit;
     }
 
-    public Optional<TransactionSummary> getTransactionSummaryCredit() {
+    public TransactionSummary getTransactionSummaryCredit() {
         return transactionSummaryCredit;
     }
 
     public String getContent() {
         StringBuilder contentBuilder = new StringBuilder();
         contentBuilder.append(swiftTextOf(transactionReferenceNumber)).append("\n");
-        if (relatedReference.isPresent()) {
-            contentBuilder.append(swiftTextOf(relatedReference.get())).append("\n");
+        if (relatedReference != null) {
+            contentBuilder.append(swiftTextOf(relatedReference)).append("\n");
         }
         contentBuilder.append(swiftTextOf(accountIdentification)).append("\n");
         contentBuilder.append(swiftTextOf(statementNumber)).append("\n");
@@ -202,18 +202,18 @@ public class MT942Page {
         contentBuilder.append(swiftTextOf(dateTimeIndicator)).append("\n");
         for (TransactionGroup transactionGroup : transactionGroupList) {
             contentBuilder.append(swiftTextOf(transactionGroup.getStatementLine())).append("\n");
-            if (transactionGroup.getInformationToAccountOwner().isPresent()) {
-                contentBuilder.append(swiftTextOf(transactionGroup.getInformationToAccountOwner().get())).append("\n");
+            if (transactionGroup.getInformationToAccountOwner() != null) {
+                contentBuilder.append(swiftTextOf(transactionGroup.getInformationToAccountOwner())).append("\n");
             }
         }
-        if (transactionSummaryDebit.isPresent()) {
-            contentBuilder.append(swiftTextOf(transactionSummaryDebit.get())).append("\n");
+        if (transactionSummaryDebit != null) {
+            contentBuilder.append(swiftTextOf(transactionSummaryDebit)).append("\n");
         }
-        if (transactionSummaryCredit.isPresent()) {
-            contentBuilder.append(swiftTextOf(transactionSummaryCredit.get())).append("\n");
+        if (transactionSummaryCredit != null) {
+            contentBuilder.append(swiftTextOf(transactionSummaryCredit)).append("\n");
         }
-        if (informationToAccountOwner.isPresent()) {
-            contentBuilder.append(swiftTextOf(informationToAccountOwner.get())).append("\n");
+        if (informationToAccountOwner != null) {
+            contentBuilder.append(swiftTextOf(informationToAccountOwner)).append("\n");
         }
         contentBuilder.append(PageSeparator.TAG);
         return contentBuilder.toString();

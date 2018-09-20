@@ -1,11 +1,11 @@
 package com.qoomon.banking.bic;
 
-import com.google.common.base.Preconditions;
+
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.notation.FieldNotationParseException;
 import com.qoomon.banking.swift.notation.SwiftNotation;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <b>Business Identifier Codes</b>
@@ -30,7 +30,7 @@ public class BIC {
     private final String institutionCode;
     private final String countryCode;
     private final String locationCode;
-    private final Optional<String> branchCode;
+    private final String branchCode;
 
     public BIC(String institutionCode, String countryCode, String locationCode, String branchCode) {
 
@@ -41,9 +41,9 @@ public class BIC {
         this.institutionCode = institutionCode;
         this.countryCode = countryCode;
         this.locationCode = locationCode;
-        this.branchCode = Optional.ofNullable(branchCode);
+        this.branchCode = branchCode;
 
-        String bicText = this.institutionCode + this.countryCode + this.locationCode + this.branchCode.orElse("");
+        String bicText = this.institutionCode + this.countryCode + this.locationCode + (this.branchCode == null ? "" : this.branchCode);
         ensureValid(bicText);
     }
 
@@ -81,7 +81,7 @@ public class BIC {
         return locationCode;
     }
 
-    public Optional<String> getBranchCode() {
+    public String getBranchCode() {
         return branchCode;
     }
 }

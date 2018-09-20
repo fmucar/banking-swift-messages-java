@@ -1,12 +1,11 @@
 package com.qoomon.banking.swift.submessage.field;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.qoomon.banking.Lists;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.notation.FieldNotationParseException;
 import com.qoomon.banking.swift.notation.SwiftNotation;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <b>Statement Number</b>
@@ -29,7 +28,7 @@ public class StatementNumber implements SwiftField {
 
     private final String statementNumber;
 
-    private final Optional<String> sequenceNumber;
+    private final String sequenceNumber;
 
 
     public StatementNumber(String statementNumber, String sequenceNumber) {
@@ -39,7 +38,7 @@ public class StatementNumber implements SwiftField {
         Preconditions.checkArgument(sequenceNumber == null || sequenceNumber.length() >= 1 && sequenceNumber.length() <= 5, "expected sequenceNumber length to be between 1 and 5, but was " + (sequenceNumber != null ? sequenceNumber.length() : null));
 
         this.statementNumber = statementNumber;
-        this.sequenceNumber = Optional.ofNullable(sequenceNumber);
+        this.sequenceNumber = sequenceNumber;
     }
 
     public static StatementNumber of(GeneralField field) throws FieldNotationParseException {
@@ -57,7 +56,7 @@ public class StatementNumber implements SwiftField {
         return statementNumber;
     }
 
-    public Optional<String> getSequenceNumber() {
+    public String getSequenceNumber() {
         return sequenceNumber;
     }
 
@@ -69,7 +68,7 @@ public class StatementNumber implements SwiftField {
     @Override
     public String getContent() {
         try {
-            return SWIFT_NOTATION.render(Lists.newArrayList(statementNumber, sequenceNumber.orElse(null)));
+            return SWIFT_NOTATION.render(Lists.newArrayList(statementNumber, sequenceNumber));
         } catch (FieldNotationParseException e) {
             throw new IllegalStateException("Invalid field values within " + getClass().getSimpleName() + " instance", e);
         }

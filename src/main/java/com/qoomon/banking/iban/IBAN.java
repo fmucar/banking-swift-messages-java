@@ -1,6 +1,6 @@
 package com.qoomon.banking.iban;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.notation.FieldNotationParseException;
 import com.qoomon.banking.swift.notation.SwiftNotation;
 

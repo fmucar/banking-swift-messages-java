@@ -1,6 +1,6 @@
 package com.qoomon.banking.swift.submessage.mt940;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.submessage.PageSeparator;
 import com.qoomon.banking.swift.submessage.field.*;
 import org.joda.money.CurrencyUnit;
@@ -8,7 +8,7 @@ import org.joda.money.CurrencyUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static com.qoomon.banking.swift.submessage.field.FieldUtils.*;
+import static com.qoomon.banking.swift.submessage.field.FieldUtils.swiftTextOf;
 
 /**
  * Created by qoomon on 24/06/16.
@@ -143,7 +143,7 @@ public class MT940Page {
     /**
      * @see RelatedReference#FIELD_TAG_21
      */
-    private final Optional<RelatedReference> relatedReference;
+    private final RelatedReference relatedReference;
 
     /**
      * @see AccountIdentification#FIELD_TAG_25
@@ -176,7 +176,7 @@ public class MT940Page {
     /**
      * @see ClosingAvailableBalance#FIELD_TAG_64
      */
-    private final Optional<ClosingAvailableBalance> closingAvailableBalance;
+    private final ClosingAvailableBalance closingAvailableBalance;
 
     /**
      * @see ForwardAvailableBalance#FIELD_TAG_65
@@ -186,7 +186,7 @@ public class MT940Page {
     /**
      * @see InformationToAccountOwner#FIELD_TAG_86
      */
-    private final Optional<InformationToAccountOwner> informationToAccountOwner;
+    private final InformationToAccountOwner informationToAccountOwner;
 
     public MT940Page(
             TransactionReferenceNumber transactionReferenceNumber,
@@ -212,18 +212,18 @@ public class MT940Page {
         String statementFundsCode = statementCurrency.getCode().substring(2, 3);
 
         for (TransactionGroup transactionGroup : transactionGroupList) {
-            if (transactionGroup.getStatementLine().getFundsCode().isPresent()){
-                String fundsCode = transactionGroup.getStatementLine().getFundsCode().get();
+            if (transactionGroup.getStatementLine().getFundsCode() != null) {
+                String fundsCode = transactionGroup.getStatementLine().getFundsCode();
                 Preconditions.checkArgument(fundsCode.equals(statementFundsCode), "statementLineFundsCode '" + fundsCode + "' does not match statement currency'" + statementCurrency + "'");
             }
         }
 
-        if(closingBalance != null){
+        if (closingBalance != null) {
             CurrencyUnit currency = closingBalance.getAmount().getCurrencyUnit();
             Preconditions.checkArgument(currency.equals(statementCurrency), "closingBalanceCurrency '" + currency + "' does not match statement currency'" + statementCurrency + "'");
         }
 
-        if(closingAvailableBalance != null){
+        if (closingAvailableBalance != null) {
             CurrencyUnit currency = closingAvailableBalance.getAmount().getCurrencyUnit();
             Preconditions.checkArgument(currency.equals(statementCurrency), "closingAvailableBalanceCurrency '" + currency + "' does not match statement currency'" + statementCurrency + "'");
         }
@@ -234,22 +234,22 @@ public class MT940Page {
         }
 
         this.transactionReferenceNumber = transactionReferenceNumber;
-        this.relatedReference = Optional.ofNullable(relatedReference);
+        this.relatedReference = relatedReference;
         this.accountIdentification = accountIdentification;
         this.statementNumber = statementNumber;
         this.openingBalance = openingBalance;
         this.transactionGroupList = transactionGroupList;
         this.closingBalance = closingBalance;
-        this.closingAvailableBalance = Optional.ofNullable(closingAvailableBalance);
+        this.closingAvailableBalance = closingAvailableBalance;
         this.forwardAvailableBalanceList = forwardAvailableBalanceList;
-        this.informationToAccountOwner = Optional.ofNullable(informationToAccountOwner);
+        this.informationToAccountOwner = informationToAccountOwner;
     }
 
     public TransactionReferenceNumber getTransactionReferenceNumber() {
         return transactionReferenceNumber;
     }
 
-    public Optional<RelatedReference> getRelatedReference() {
+    public RelatedReference getRelatedReference() {
         return relatedReference;
     }
 
@@ -273,7 +273,7 @@ public class MT940Page {
         return closingBalance;
     }
 
-    public Optional<ClosingAvailableBalance> getClosingAvailableBalance() {
+    public ClosingAvailableBalance getClosingAvailableBalance() {
         return closingAvailableBalance;
     }
 
@@ -281,7 +281,7 @@ public class MT940Page {
         return forwardAvailableBalanceList;
     }
 
-    public Optional<InformationToAccountOwner> getInformationToAccountOwner() {
+    public InformationToAccountOwner getInformationToAccountOwner() {
         return informationToAccountOwner;
     }
 
@@ -289,27 +289,27 @@ public class MT940Page {
     public String getContent() {
         StringBuilder contentBuilder = new StringBuilder();
         contentBuilder.append(swiftTextOf(transactionReferenceNumber)).append("\n");
-        if (relatedReference.isPresent()) {
-            contentBuilder.append(swiftTextOf(relatedReference.get())).append("\n");
+        if (relatedReference != null) {
+            contentBuilder.append(swiftTextOf(relatedReference)).append("\n");
         }
         contentBuilder.append(swiftTextOf(accountIdentification)).append("\n");
         contentBuilder.append(swiftTextOf(statementNumber)).append("\n");
         contentBuilder.append(swiftTextOf(openingBalance)).append("\n");
         for (TransactionGroup transactionGroup : transactionGroupList) {
             contentBuilder.append(swiftTextOf(transactionGroup.getStatementLine())).append("\n");
-            if (transactionGroup.getInformationToAccountOwner().isPresent()) {
-                contentBuilder.append(swiftTextOf(transactionGroup.getInformationToAccountOwner().get())).append("\n");
+            if (transactionGroup.getInformationToAccountOwner() != null) {
+                contentBuilder.append(swiftTextOf(transactionGroup.getInformationToAccountOwner())).append("\n");
             }
         }
         contentBuilder.append(swiftTextOf(closingBalance)).append("\n");
-        if (closingAvailableBalance.isPresent()) {
-            contentBuilder.append(swiftTextOf(closingAvailableBalance.get())).append("\n");
+        if (closingAvailableBalance != null) {
+            contentBuilder.append(swiftTextOf(closingAvailableBalance)).append("\n");
         }
         for (ForwardAvailableBalance forwardAvailableBalance : forwardAvailableBalanceList) {
             contentBuilder.append(swiftTextOf(forwardAvailableBalance)).append("\n");
         }
-        if (informationToAccountOwner.isPresent()) {
-            contentBuilder.append(swiftTextOf(informationToAccountOwner.get())).append("\n");
+        if (informationToAccountOwner != null) {
+            contentBuilder.append(swiftTextOf(informationToAccountOwner)).append("\n");
         }
         contentBuilder.append(PageSeparator.TAG);
         return contentBuilder.toString();

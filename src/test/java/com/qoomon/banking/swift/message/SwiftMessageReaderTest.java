@@ -1,8 +1,8 @@
 package com.qoomon.banking.swift.message;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
+import com.qoomon.banking.Resources;
 import com.qoomon.banking.TestUtils;
+import com.qoomon.banking.Throwables;
 import com.qoomon.banking.swift.message.exception.SwiftMessageParseException;
 import org.junit.Test;
 
@@ -15,7 +15,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 /**
  * Created by qoomon on 24/06/16.

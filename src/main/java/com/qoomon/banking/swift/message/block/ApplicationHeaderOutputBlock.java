@@ -1,6 +1,6 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
 import com.qoomon.banking.swift.submessage.field.subfield.MessagePriority;
 

@@ -1,7 +1,8 @@
 package com.qoomon.banking.swift.bcsmessage;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
+
+import com.qoomon.banking.ImmutableMap;
+import com.qoomon.banking.Preconditions;
 
 import java.util.Map;
 

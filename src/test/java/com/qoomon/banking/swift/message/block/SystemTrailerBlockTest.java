@@ -23,8 +23,8 @@ public class SystemTrailerBlockTest {
         // Then
         assertThat(block).isNotNull();
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(block.getChecksum()).contains("F7C4F89AF66D");
-        softly.assertThat(block.getTraining()).contains("");
+        softly.assertThat(block.getChecksum()).isEqualTo("F7C4F89AF66D");
+        softly.assertThat(block.getTraining()).isEqualTo("");
         softly.assertThat(block.getAdditionalSubblocks("COP").getContent()).isEqualTo("P");
         softly.assertAll();
     }

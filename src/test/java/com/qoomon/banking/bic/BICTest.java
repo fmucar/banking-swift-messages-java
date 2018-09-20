@@ -1,9 +1,11 @@
 package com.qoomon.banking.bic;
 
-import com.qoomon.banking.bic.BIC;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 /**
  * Created by qoomon on 19/07/16.
@@ -42,7 +44,7 @@ public class BICTest {
         assertThat(bic.getInstitutionCode()).isEqualTo("HASP");
         assertThat(bic.getCountryCode()).isEqualTo("DE");
         assertThat(bic.getLocationCode()).isEqualTo("HH");
-        assertThat(bic.getBranchCode()).isNotPresent();
+        assertThat(bic.getBranchCode()).isNull();
     }
 
 }

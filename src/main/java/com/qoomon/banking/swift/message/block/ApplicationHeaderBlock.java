@@ -1,9 +1,7 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
-
-import java.util.Optional;
 
 /**
  * <b>Input Application Header Block</b>
@@ -25,21 +23,21 @@ public class ApplicationHeaderBlock implements SwiftBlock {
 
     public final Type type;
 
-    private final Optional<ApplicationHeaderInputBlock> input;
+    private final ApplicationHeaderInputBlock input;
 
-    private final Optional<ApplicationHeaderOutputBlock> output;
+    private final ApplicationHeaderOutputBlock output;
 
 
     public ApplicationHeaderBlock(ApplicationHeaderInputBlock input) {
         type = Type.INPUT;
-        this.input = Optional.of(input);
-        this.output = Optional.empty();
+        this.input = input;
+        this.output = null;
     }
 
     public ApplicationHeaderBlock(ApplicationHeaderOutputBlock output) {
         type = Type.OUTPUT;
-        this.input = Optional.empty();
-        this.output = Optional.of(output);
+        this.input = null;
+        this.output = output;
     }
 
     public static ApplicationHeaderBlock of(GeneralBlock block) throws BlockFieldParseException {
@@ -59,11 +57,11 @@ public class ApplicationHeaderBlock implements SwiftBlock {
 
     }
 
-    public Optional<ApplicationHeaderInputBlock> getInput() {
+    public ApplicationHeaderInputBlock getInput() {
         return input;
     }
 
-    public Optional<ApplicationHeaderOutputBlock> getOutput() {
+    public ApplicationHeaderOutputBlock getOutput() {
         return output;
     }
 
@@ -78,10 +76,10 @@ public class ApplicationHeaderBlock implements SwiftBlock {
 
     @Override
     public String getContent() {
-        if (getInput().isPresent()){
-            return getInput().get().getContent();
+        if (getInput() != null) {
+            return getInput().getContent();
         } else {
-            return getOutput().get().getContent();
+            return getOutput().getContent();
         }
     }
 

@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.*;
  */
 public class StatementNumberTest {
 
-
     @Test
     public void of() throws Exception {
         // Given

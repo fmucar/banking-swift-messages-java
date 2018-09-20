@@ -1,7 +1,7 @@
 package com.qoomon.banking.swift.notation;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import com.qoomon.banking.ImmutableList;
+import com.qoomon.banking.Preconditions;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -117,7 +117,8 @@ public class SwiftNotation {
                     throw new FieldNotationParseException("Mandatory field '" + fieldIndex + "' value can't be null", resultBuilder.length());
                 }
             } else {
-                String renderedFieldValue = fieldNotation.getPrefix().map(SEPARATOR_MAP::get).orElse("") + fieldValue;
+//                String renderedFieldValue = fieldNotation.getPrefix().map(SEPARATOR_MAP::get).orElse("") + fieldValue;
+                String renderedFieldValue = (fieldNotation.getPrefix() == null ? "" : SEPARATOR_MAP.get(fieldNotation.getPrefix())) + fieldValue;
                 Matcher fieldMatcher = fieldPattern.matcher(renderedFieldValue);
                 if (!fieldMatcher.find() || fieldMatcher.end() != renderedFieldValue.length()) {
                     throw new FieldNotationParseException("Field value '" + renderedFieldValue + "' didn't match " + fieldNotation, resultBuilder.toString().length());
@@ -210,8 +211,8 @@ public class SwiftNotation {
             List<String> fieldDelimiterList = new LinkedList<>();
             List<FieldNotation> upcomingFieldNotations = fieldNotationList.subList(fieldIndex + 1, fieldNotationList.size());
             for (FieldNotation upcomingFieldNotation : upcomingFieldNotations) {
-                if (upcomingFieldNotation.getPrefix().isPresent()) {
-                    fieldDelimiterList.add(SEPARATOR_MAP.get(upcomingFieldNotation.getPrefix().get()));
+                if (upcomingFieldNotation.getPrefix() != null) {
+                    fieldDelimiterList.add(SEPARATOR_MAP.get(upcomingFieldNotation.getPrefix()));
                 }
                 if (!upcomingFieldNotation.isOptional()) {
                     break;
@@ -225,12 +226,12 @@ public class SwiftNotation {
             String subFieldRegex;
 
             // handle length
-            Optional<String> lengthSign = currentSubfield.getLengthSign();
-            if (!lengthSign.isPresent()) {
+            String lengthSign = currentSubfield.getLengthSign();
+            if (lengthSign == null) {
                 int maxCharacters = currentSubfield.getLength0();
                 subFieldRegex = "(:?" + delimiterLookaheadRegex + charSetRegex + ")" + "{1," + maxCharacters + "}";
             } else {
-                switch (lengthSign.get()) {
+                switch (lengthSign) {
                     case FieldNotation.FIXED_LENGTH_SIGN: {
                         int fixedCharacters = currentSubfield.getLength0();
                         subFieldRegex = "(:?" + delimiterLookaheadRegex + charSetRegex + ")" + "{" + fixedCharacters + "}";
@@ -238,13 +239,13 @@ public class SwiftNotation {
                     }
                     case FieldNotation.RANGE_LENGTH_SIGN: {
                         int minCharacters = currentSubfield.getLength0();
-                        int maxCharacters = currentSubfield.getLength1().get();
+                        int maxCharacters = currentSubfield.getLength1();
                         subFieldRegex = "(:?" + delimiterLookaheadRegex + charSetRegex + ")" + "{" + minCharacters + "," + maxCharacters + "}";
                         break;
                     }
                     case FieldNotation.MULTILINE_LENGTH_SIGN: {
                         int maxLines = currentSubfield.getLength0();
-                        int maxLineCharacters = currentSubfield.getLength1().get();
+                        int maxLineCharacters = currentSubfield.getLength1();
                         String lineCharactersRegexRange = "{1," + maxLineCharacters + "}";
                         String lineRegex = "[^\\n]" + lineCharactersRegexRange;
                         subFieldRegex = "(?=" + lineRegex + "(\\n" + lineRegex + ")" + "{0," + (maxLines - 1) + "}" + "$)" // lookahead for maxLines
@@ -261,9 +262,9 @@ public class SwiftNotation {
             subFieldRegex = "(" + subFieldRegex + ")";
 
             // handle prefix
-            Optional<String> prefix = currentSubfield.getPrefix();
-            if (prefix.isPresent()) {
-                subFieldRegex = SEPARATOR_MAP.get(prefix.get()) + subFieldRegex;
+            String prefix = currentSubfield.getPrefix();
+            if (prefix != null) {
+                subFieldRegex = SEPARATOR_MAP.get(prefix) + subFieldRegex;
             }
 
             // make field optional if so
@@ -322,7 +323,7 @@ public class SwiftNotation {
 
         return ImmutableList.copyOf(result);
     }
-    
+
 
     public String getNotation() {
         return notation;

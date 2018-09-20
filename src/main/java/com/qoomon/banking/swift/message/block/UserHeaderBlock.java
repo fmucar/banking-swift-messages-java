@@ -1,14 +1,13 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
+import com.qoomon.banking.ImmutableMap;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
 import com.qoomon.banking.swift.message.block.exception.BlockParseException;
 
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * <b>User Header Block</b>
@@ -27,11 +26,11 @@ public class UserHeaderBlock implements SwiftBlock {
 
     public static final String BLOCK_ID_3 = "3";
 
-    public final Optional<String> bankingPriorityCode;
+    public final String bankingPriorityCode;
 
     public final String messageUserReference;
 
-    public final ImmutableMap<String, GeneralBlock> additionalSubblocks;
+    public final Map<String, GeneralBlock> additionalSubblocks;
 
 
     public UserHeaderBlock(String bankingPriorityCode, String messageUserReference, Map<String, GeneralBlock> additionalSubblocks) {
@@ -39,7 +38,7 @@ public class UserHeaderBlock implements SwiftBlock {
         Preconditions.checkArgument(messageUserReference != null, "messageUserReference can't be null");
         Preconditions.checkArgument(additionalSubblocks != null, "additionalSubblocks can't be null");
 
-        this.bankingPriorityCode = Optional.ofNullable(bankingPriorityCode);
+        this.bankingPriorityCode = bankingPriorityCode;
         this.messageUserReference = messageUserReference;
         this.additionalSubblocks = ImmutableMap.copyOf(additionalSubblocks);
     }
@@ -75,7 +74,7 @@ public class UserHeaderBlock implements SwiftBlock {
         return new UserHeaderBlock(bankingPriorityCode, messageUserReference, additionalSubblocks);
     }
 
-    public Optional<String> getBankingPriorityCode() {
+    public String getBankingPriorityCode() {
         return bankingPriorityCode;
     }
 
@@ -91,8 +90,8 @@ public class UserHeaderBlock implements SwiftBlock {
     @Override
     public String getContent() {
         StringBuilder contentBuilder = new StringBuilder();
-        if(bankingPriorityCode.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("113", bankingPriorityCode.get()));
+        if (bankingPriorityCode != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("113", bankingPriorityCode));
         }
         contentBuilder.append(BlockUtils.swiftTextOf("108", messageUserReference));
         for (GeneralBlock subblock : additionalSubblocks.values()) {

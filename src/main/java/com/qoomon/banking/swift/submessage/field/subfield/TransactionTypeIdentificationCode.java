@@ -1,6 +1,7 @@
 package com.qoomon.banking.swift.submessage.field.subfield;
 
-import com.google.common.base.Preconditions;
+
+import com.qoomon.banking.Preconditions;
 
 /**
  * BNK, // Securities Related Item – Bank fees

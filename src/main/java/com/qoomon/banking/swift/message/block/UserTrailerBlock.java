@@ -1,14 +1,13 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
+import com.qoomon.banking.ImmutableMap;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
 import com.qoomon.banking.swift.message.block.exception.BlockParseException;
 
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * <b>User Header Block</b>
@@ -31,31 +30,31 @@ public class UserTrailerBlock implements SwiftBlock {
 
     public static final String BLOCK_ID_5 = "5";
 
-    public final Optional<String> messageAuthenticationCode;
+    private final String messageAuthenticationCode;
 
-    public final Optional<String> proprietaryAuthenticationCode;
+    private final String proprietaryAuthenticationCode;
 
-    public final Optional<String> checksum;
+    private final String checksum;
 
-    public final Optional<String> training;
+    private final String training;
 
-    public final Optional<String> possibleDuplicateEmission;
+    private final String possibleDuplicateEmission;
 
-    public final Optional<String> deliveryDelay;
+    private final String deliveryDelay;
 
-    private final ImmutableMap<String, GeneralBlock> additionalSubblocks;
+    private final Map<String, GeneralBlock> additionalSubblocks;
 
 
     public UserTrailerBlock(String messageAuthenticationCode, String proprietaryAuthenticationCode, String checksum, String training, String possibleDuplicateEmission, String deliveryDelay, Map<String, GeneralBlock> additionalSubblocks) {
 
         Preconditions.checkArgument(additionalSubblocks != null, "additionalSubblocks can't be null");
 
-        this.messageAuthenticationCode = Optional.ofNullable(messageAuthenticationCode);
-        this.proprietaryAuthenticationCode = Optional.ofNullable(proprietaryAuthenticationCode);
-        this.checksum = Optional.ofNullable(checksum);
-        this.training = Optional.ofNullable(training);
-        this.possibleDuplicateEmission = Optional.ofNullable(possibleDuplicateEmission);
-        this.deliveryDelay = Optional.ofNullable(deliveryDelay);
+        this.messageAuthenticationCode = messageAuthenticationCode;
+        this.proprietaryAuthenticationCode = proprietaryAuthenticationCode;
+        this.checksum = checksum;
+        this.training = training;
+        this.possibleDuplicateEmission = possibleDuplicateEmission;
+        this.deliveryDelay = deliveryDelay;
         this.additionalSubblocks = ImmutableMap.copyOf(additionalSubblocks);
     }
 
@@ -106,19 +105,19 @@ public class UserTrailerBlock implements SwiftBlock {
         return new UserTrailerBlock(messageAuthenticationCode, proprietaryAuthenticationCode, checksum, training, possibleDuplicateEmission, deliveryDelay, additionalSubblocks);
     }
 
-    public Optional<String> getMessageAuthenticationCode() {
+    public String getMessageAuthenticationCode() {
         return messageAuthenticationCode;
     }
 
-    public Optional<String> getChecksum() {
+    public String getChecksum() {
         return checksum;
     }
 
-    public Optional<String> getPossibleDuplicateEmission() {
+    public String getPossibleDuplicateEmission() {
         return possibleDuplicateEmission;
     }
 
-    public Optional<String> getDeliveryDelay() {
+    public String getDeliveryDelay() {
         return deliveryDelay;
     }
 
@@ -126,11 +125,11 @@ public class UserTrailerBlock implements SwiftBlock {
         return additionalSubblocks.get(id);
     }
 
-    public Optional<String> getTraining() {
+    public String getTraining() {
         return training;
     }
 
-    public Optional<String> getProprietaryAuthenticationCode() {
+    public String getProprietaryAuthenticationCode() {
         return proprietaryAuthenticationCode;
     }
 
@@ -142,23 +141,23 @@ public class UserTrailerBlock implements SwiftBlock {
     @Override
     public String getContent() {
         StringBuilder contentBuilder = new StringBuilder();
-        if(messageAuthenticationCode.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("MAC", messageAuthenticationCode.get()));
+        if (messageAuthenticationCode != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("MAC", messageAuthenticationCode));
         }
-        if(proprietaryAuthenticationCode.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("PAC", proprietaryAuthenticationCode.get()));
+        if (proprietaryAuthenticationCode != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("PAC", proprietaryAuthenticationCode));
         }
-        if(checksum.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("CHK", checksum.get()));
+        if (checksum != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("CHK", checksum));
         }
-        if(training.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("TNG", training.get()));
+        if (training != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("TNG", training));
         }
-        if(possibleDuplicateEmission.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("PDE", possibleDuplicateEmission.get()));
+        if (possibleDuplicateEmission != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("PDE", possibleDuplicateEmission));
         }
-        if(deliveryDelay.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("DLM", deliveryDelay.get()));
+        if (deliveryDelay != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("DLM", deliveryDelay));
         }
 
         for (GeneralBlock subblock : additionalSubblocks.values()) {

@@ -22,7 +22,7 @@ public class TextBlockTest {
 
         // Then
         assertThat(block).isNotNull();
-        assertThat(block.getInfoLine()).isNotPresent();
+        assertThat(block.getInfoLine()).isNull();
         assertThat(block.getText()).isEqualTo("abc\n-");
     }
 

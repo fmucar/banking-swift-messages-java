@@ -1,10 +1,9 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
 import com.qoomon.banking.swift.submessage.field.subfield.MessagePriority;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,9 +36,9 @@ public class ApplicationHeaderInputBlock {
 
     private final MessagePriority messagePriority;
 
-    private final Optional<String> deliveryMonitoring;
+    private final String deliveryMonitoring;
 
-    private final Optional<String> obsolescencePeriod;
+    private final String obsolescencePeriod;
 
 
     public ApplicationHeaderInputBlock(String messageType, String receiverAddress, MessagePriority messagePriority, String deliveryMonitoring, String obsolescencePeriod) {
@@ -51,8 +50,8 @@ public class ApplicationHeaderInputBlock {
         this.messageType = messageType;
         this.receiverAddress = receiverAddress;
         this.messagePriority = messagePriority;
-        this.deliveryMonitoring = Optional.ofNullable(deliveryMonitoring);
-        this.obsolescencePeriod = Optional.ofNullable(obsolescencePeriod);
+        this.deliveryMonitoring = deliveryMonitoring;
+        this.obsolescencePeriod = obsolescencePeriod;
     }
 
     public static ApplicationHeaderInputBlock of(GeneralBlock block) throws BlockFieldParseException {
@@ -89,11 +88,11 @@ public class ApplicationHeaderInputBlock {
         return messagePriority;
     }
 
-    public Optional<String> getDeliveryMonitoring() {
+    public String getDeliveryMonitoring() {
         return deliveryMonitoring;
     }
 
-    public Optional<String> getObsolescencePeriod() {
+    public String getObsolescencePeriod() {
         return obsolescencePeriod;
     }
 
@@ -103,11 +102,11 @@ public class ApplicationHeaderInputBlock {
         contentBuilder.append(messageType);
         contentBuilder.append(receiverAddress);
         contentBuilder.append(messagePriority.asText());
-        if (deliveryMonitoring.isPresent()) {
-            contentBuilder.append(deliveryMonitoring.get());
+        if (deliveryMonitoring != null) {
+            contentBuilder.append(deliveryMonitoring);
         }
-        if (obsolescencePeriod.isPresent()) {
-            contentBuilder.append(obsolescencePeriod.get());
+        if (obsolescencePeriod != null) {
+            contentBuilder.append(obsolescencePeriod);
         }
         return contentBuilder.toString();
     }

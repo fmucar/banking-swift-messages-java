@@ -1,7 +1,7 @@
 package com.qoomon.banking.swift.submessage.field;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
+import com.qoomon.banking.ImmutableSet;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.submessage.PageSeparator;
 import com.qoomon.banking.swift.submessage.field.exception.FieldLineParseException;
 import com.qoomon.banking.swift.submessage.field.exception.FieldParseException;

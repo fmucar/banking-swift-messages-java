@@ -1,12 +1,12 @@
 package com.qoomon.banking.swift.submessage.mt942;
 
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
+import com.qoomon.banking.Resources;
 import com.qoomon.banking.TestUtils;
+import com.qoomon.banking.Throwables;
 import com.qoomon.banking.swift.message.exception.SwiftMessageParseException;
-import com.qoomon.banking.swift.submessage.mt940.MT940Page;
 import com.qoomon.banking.swift.submessage.mt940.MT940PageReader;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileReader;
@@ -18,12 +18,40 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 /**
  * Created by qoomon on 05/07/16.
  */
 public class MT942PageReaderTest {
+
+    @Test
+    @Ignore
+    public void testDeneme() throws Exception {
+
+        Path path = Paths.get(getClass().getClassLoader().getResource("mt942.txt").toURI());
+
+        String content = new String(Files.readAllBytes(path));
+//        System.out.println(content);
+        // Given
+        String mt942MessageText = content;
+
+        MT942PageReader classUnderTest = new MT942PageReader(new StringReader(mt942MessageText));
+
+        // When
+        List<MT942Page> pageList = TestUtils.collectUntilNull(classUnderTest::read);
+
+        // Then
+        assertThat(pageList).hasSize(1);
+        MT942Page mt942Page = pageList.get(0);
+
+//        mt942Page.getTransactionGroupList();
+
+        assertThat(mt942Page.getTransactionGroupList()).hasSize(3);
+        assertThat(mt942Page.getStatementNumber().getStatementNumber()).isEqualTo("1");
+        assertThat(mt942Page.getStatementNumber().getSequenceNumber()).contains("1");
+    }
 
     @Test
     public void parse_WHEN_parse_valid_file_RETURN_message() throws Exception {
@@ -157,5 +185,4 @@ public class MT942PageReaderTest {
         assertThat(errors[0]).isEqualTo(0);
 
     }
-
 }

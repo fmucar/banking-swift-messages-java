@@ -1,13 +1,16 @@
 package com.qoomon.banking.swift.submessage.mt942;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
+
+
+import com.qoomon.banking.ImmutableSet;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.exception.SwiftMessageParseException;
 import com.qoomon.banking.swift.submessage.PageSeparator;
 import com.qoomon.banking.swift.submessage.exception.PageParserException;
 import com.qoomon.banking.swift.submessage.field.*;
 
 import java.io.Reader;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +34,6 @@ public class MT942PageReader {
     public MT942PageReader(Reader textReader) {
 
         Preconditions.checkArgument(textReader != null, "textReader can't be null");
-
         this.fieldReader = new SwiftFieldReader(textReader);
     }
 

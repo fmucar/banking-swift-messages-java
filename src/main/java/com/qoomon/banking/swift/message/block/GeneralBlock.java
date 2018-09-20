@@ -1,6 +1,6 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 
 /**
  * Created by qoomon on 07/07/16.

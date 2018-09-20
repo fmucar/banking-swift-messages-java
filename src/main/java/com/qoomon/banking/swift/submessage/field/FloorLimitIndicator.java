@@ -1,7 +1,7 @@
 package com.qoomon.banking.swift.submessage.field;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.qoomon.banking.Lists;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.notation.FieldNotationParseException;
 import com.qoomon.banking.swift.notation.SwiftDecimalFormatter;
 import com.qoomon.banking.swift.notation.SwiftNotation;
@@ -11,7 +11,6 @@ import org.joda.money.CurrencyUnit;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <b>Floor Limit Indicator Debit/Credit</b>
@@ -33,7 +32,7 @@ public class FloorLimitIndicator implements SwiftField {
 
     public static final SwiftNotation SWIFT_NOTATION = new SwiftNotation("3!a[1!a]15d");
 
-    private final Optional<DebitCreditMark> debitCreditMark;
+    private final DebitCreditMark debitCreditMark;
 
     private final BigMoney amount;
 
@@ -43,7 +42,7 @@ public class FloorLimitIndicator implements SwiftField {
         Preconditions.checkArgument(amount != null, "amount can't be null");
         Preconditions.checkArgument(amount.isPositiveOrZero(), "amount can't be negative");
 
-        this.debitCreditMark = Optional.ofNullable(debitCreditMark);
+        this.debitCreditMark = debitCreditMark;
         this.amount = amount;
     }
 
@@ -61,7 +60,7 @@ public class FloorLimitIndicator implements SwiftField {
     }
 
 
-    public Optional<DebitCreditMark> getDebitCreditMark() {
+    public DebitCreditMark getDebitCreditMark() {
         return debitCreditMark;
     }
 
@@ -69,14 +68,23 @@ public class FloorLimitIndicator implements SwiftField {
         return amount;
     }
 
-    public Optional<BigMoney> getSignedAmount() {
-        return getDebitCreditMark().map(
-                debitCreditMark -> {
-                    if (debitCreditMark.sign() < 0) {
-                        return amount.negated();
-                    }
-                    return amount;
-                });
+    public BigMoney getSignedAmount() {
+        BigMoney result = null;
+        if (debitCreditMark != null) {
+            if (debitCreditMark.sign() < 0) {
+                result = amount.negated();
+            } else {
+                result = amount;
+            }
+        }
+
+        return result;
+//        return getDebitCreditMark().map(debitCreditMark -> {
+//                    if (debitCreditMark.sign() < 0) {
+//                        return amount.negated();
+//                    }
+//                    return amount;
+//                });
     }
 
     @Override
@@ -87,11 +95,17 @@ public class FloorLimitIndicator implements SwiftField {
     @Override
     public String getContent() {
         try {
+
             return SWIFT_NOTATION.render(Lists.newArrayList(
                     amount.getCurrencyUnit().getCode(),
-                    debitCreditMark.map(DebitCreditMark::toFieldValue).orElse(null),
+                    debitCreditMark == null ? null : debitCreditMark.toFieldValue(),
                     SwiftDecimalFormatter.format(amount.getAmount())
             ));
+//            return SWIFT_NOTATION.render(Lists.newArrayList(
+//                    amount.getCurrencyUnit().getCode(),
+//                    debitCreditMark.map(DebitCreditMark::toFieldValue).orElse(null),
+//                    SwiftDecimalFormatter.format(amount.getAmount())
+//            ));
         } catch (FieldNotationParseException e) {
             throw new IllegalStateException("Invalid field values within " + getClass().getSimpleName() + " instance", e);
         }

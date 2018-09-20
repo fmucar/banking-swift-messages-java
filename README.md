@@ -40,3 +40,21 @@ If you need more MT formats just let me know.
 
 ###### Tags
 Banking, Reader, Decoder
+
+
+**********************************
+
+Temporary fix for jars not available in the HMRC nexus repo. You must have mvn setup in the PATH.
+
+If you have not, you can append the below to your ~/.bash_profile and source the file after update.
+
+
+    export JAVA_HOME=/opt/java/jdk1.8.0_161
+    PATH=$PATH:$JAVA_HOME/bin
+    export MAVEN_HOME="/opt/tools/apache-maven-3.5.0/"
+    PATH=$PATH:$MAVEN_HOME/bin
+    export PATH
+
+
+
+Run the setup.sh file in the setup directory to install the required jar files to your local repo

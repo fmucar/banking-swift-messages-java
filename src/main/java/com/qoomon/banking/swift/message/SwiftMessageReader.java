@@ -1,7 +1,7 @@
 package com.qoomon.banking.swift.message;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
+import com.qoomon.banking.ImmutableSet;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.*;
 import com.qoomon.banking.swift.message.exception.SwiftMessageParseException;
 

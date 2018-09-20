@@ -1,6 +1,6 @@
 package com.qoomon.banking.swift.submessage.field;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 
 /**
  * Created by qoomon on 27/06/16.

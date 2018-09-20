@@ -1,13 +1,12 @@
 package com.qoomon.banking.swift.message.block;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.exception.BlockFieldParseException;
 import com.qoomon.banking.swift.message.block.exception.BlockParseException;
 
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * <b>System Trail Block</b>
@@ -30,17 +29,17 @@ public class SystemTrailerBlock implements SwiftBlock {
 
     public static final String BLOCK_ID_S = "S";
 
-    private final Optional<String> checksum;
+    private final String checksum;
 
-    private final Optional<String> systemOriginatedMessage;
+    private final String systemOriginatedMessage;
 
-    private final Optional<String> training;
+    private final String training;
 
-    private final Optional<String> possibleDuplicateMessage;
+    private final String possibleDuplicateMessage;
 
-    private final Optional<String> delayedMessage;
+    private final String delayedMessage;
 
-    private final Optional<String> messageReference;
+    private final String messageReference;
 
 
     private final Map<String, GeneralBlock> additionalSubblocks;
@@ -55,12 +54,12 @@ public class SystemTrailerBlock implements SwiftBlock {
 
         Preconditions.checkArgument(additionalSubblocks != null, "additionalSubblocks can't be null");
 
-        this.checksum = Optional.ofNullable(checksum);
-        this.systemOriginatedMessage = Optional.ofNullable(systemOriginatedMessage);
-        this.training = Optional.ofNullable(training);
-        this.possibleDuplicateMessage = Optional.ofNullable(possibleDuplicateMessage);
-        this.delayedMessage = Optional.ofNullable(delayedMessage);
-        this.messageReference = Optional.ofNullable(messageReference);
+        this.checksum = checksum;
+        this.systemOriginatedMessage = systemOriginatedMessage;
+        this.training = training;
+        this.possibleDuplicateMessage = possibleDuplicateMessage;
+        this.delayedMessage = delayedMessage;
+        this.messageReference = messageReference;
         this.additionalSubblocks = additionalSubblocks;
     }
 
@@ -120,27 +119,27 @@ public class SystemTrailerBlock implements SwiftBlock {
         );
     }
 
-    public Optional<String> getChecksum() {
+    public String getChecksum() {
         return checksum;
     }
 
-    public Optional<String> getSystemOriginatedMessage() {
+    public String getSystemOriginatedMessage() {
         return systemOriginatedMessage;
     }
 
-    public Optional<String> getTraining() {
+    public String getTraining() {
         return training;
     }
 
-    public Optional<String> getPossibleDuplicateMessage() {
+    public String getPossibleDuplicateMessage() {
         return possibleDuplicateMessage;
     }
 
-    public Optional<String> getDelayedMessage() {
+    public String getDelayedMessage() {
         return delayedMessage;
     }
 
-    public Optional<String> getMessageReference() {
+    public String getMessageReference() {
         return messageReference;
     }
 
@@ -156,23 +155,23 @@ public class SystemTrailerBlock implements SwiftBlock {
     @Override
     public String getContent() {
         StringBuilder contentBuilder = new StringBuilder();
-        if(checksum.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("CHK", checksum.get()));
+        if (checksum != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("CHK", checksum));
         }
-        if(systemOriginatedMessage.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("SYS", systemOriginatedMessage.get()));
+        if (systemOriginatedMessage != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("SYS", systemOriginatedMessage));
         }
-        if(training.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("TNG", training.get()));
+        if (training != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("TNG", training));
         }
-        if(possibleDuplicateMessage.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("PDM", possibleDuplicateMessage.get()));
+        if (possibleDuplicateMessage != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("PDM", possibleDuplicateMessage));
         }
-        if(delayedMessage.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("DLM", delayedMessage.get()));
+        if (delayedMessage != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("DLM", delayedMessage));
         }
-        if(messageReference.isPresent()) {
-            contentBuilder.append(BlockUtils.swiftTextOf("MRF", messageReference.get()));
+        if (messageReference != null) {
+            contentBuilder.append(BlockUtils.swiftTextOf("MRF", messageReference));
         }
         for (GeneralBlock subblock : additionalSubblocks.values()) {
             contentBuilder.append(BlockUtils.swiftTextOf(subblock.getId(), subblock.getContent()));

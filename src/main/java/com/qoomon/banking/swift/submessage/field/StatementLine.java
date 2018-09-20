@@ -1,7 +1,7 @@
 package com.qoomon.banking.swift.submessage.field;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.qoomon.banking.Lists;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.notation.FieldNotationParseException;
 import com.qoomon.banking.swift.notation.SwiftDecimalFormatter;
 import com.qoomon.banking.swift.notation.SwiftNotation;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <b>Statement Line</b>
@@ -55,7 +54,7 @@ public class StatementLine implements SwiftField {
 
     private final DebitCreditMark debitCreditMark;
 
-    private final Optional<String> fundsCode;
+    private final String fundsCode;
 
     private final BigDecimal amount;
 
@@ -63,9 +62,9 @@ public class StatementLine implements SwiftField {
 
     private final String referenceForAccountOwner;
 
-    private final Optional<String> referenceForBank;
+    private final String referenceForBank;
 
-    private final Optional<String> supplementaryDetails;
+    private final String supplementaryDetails;
 
 
     public StatementLine(LocalDate valueDate,
@@ -91,12 +90,12 @@ public class StatementLine implements SwiftField {
         this.entryDate = entryDate != null ? entryDate : valueDate;
         this.debitCreditType = debitCreditType;
         this.debitCreditMark = debitCreditMark;
-        this.fundsCode = Optional.ofNullable(fundsCode);
+        this.fundsCode = fundsCode;
         this.amount = amount;
         this.transactionTypeIdentificationCode = transactionTypeIdentificationCode;
         this.referenceForAccountOwner = referenceForAccountOwner;
-        this.referenceForBank = Optional.ofNullable(referenceForBank);
-        this.supplementaryDetails = Optional.ofNullable(supplementaryDetails);
+        this.referenceForBank = referenceForBank;
+        this.supplementaryDetails = supplementaryDetails;
     }
 
     public static StatementLine of(GeneralField field) throws FieldNotationParseException {
@@ -174,7 +173,7 @@ public class StatementLine implements SwiftField {
         return debitCreditMark;
     }
 
-    public Optional<String> getFundsCode() {
+    public String getFundsCode() {
         return fundsCode;
     }
 
@@ -201,11 +200,11 @@ public class StatementLine implements SwiftField {
         return referenceForAccountOwner;
     }
 
-    public Optional<String> getReferenceForBank() {
+    public String getReferenceForBank() {
         return referenceForBank;
     }
 
-    public Optional<String> getSupplementaryDetails() {
+    public String getSupplementaryDetails() {
         return supplementaryDetails;
     }
 
@@ -221,13 +220,13 @@ public class StatementLine implements SwiftField {
                     VALUE_DATE_FORMATTER.format(valueDate),
                     valueDate.equals(entryDate) ? null : ENTRY_DATE_FORMATTER.format(entryDate),
                     debitCreditMark.toFieldValue(),
-                    fundsCode.orElse(null),
+                    fundsCode,
                     SwiftDecimalFormatter.format(amount),
                     transactionTypeIdentificationCode.getType().name(),
                     transactionTypeIdentificationCode.getCode(),
                     referenceForAccountOwner,
-                    referenceForBank.orElse(null),
-                    supplementaryDetails.orElse(null)
+                    referenceForBank,
+                    supplementaryDetails
             ));
         } catch (FieldNotationParseException e) {
             throw new IllegalStateException("Invalid field values within " + getClass().getSimpleName() + " instance", e);

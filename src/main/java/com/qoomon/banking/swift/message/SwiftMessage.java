@@ -1,11 +1,9 @@
 package com.qoomon.banking.swift.message;
 
-import com.google.common.base.Preconditions;
+import com.qoomon.banking.Preconditions;
 import com.qoomon.banking.swift.message.block.*;
 
-import java.util.Optional;
-
-import static com.qoomon.banking.swift.message.block.BlockUtils.*;
+import static com.qoomon.banking.swift.message.block.BlockUtils.swiftTextOf;
 
 /**
  * Created by qoomon on 24/06/16.
@@ -108,7 +106,7 @@ public class SwiftMessage {
     /**
      * {3:} User Header Block
      */
-    private final Optional<UserHeaderBlock> userHeaderBlock;
+    private final UserHeaderBlock userHeaderBlock;
 
     /**
      * {4:} Text Block
@@ -118,12 +116,12 @@ public class SwiftMessage {
     /**
      * {5:} User Trailer Block
      */
-    private final Optional<UserTrailerBlock> userTrailerBlock;
+    private final UserTrailerBlock userTrailerBlock;
 
     /**
      * {S:} System Trailer Block
      */
-    private final Optional<SystemTrailerBlock> systemTrailerBlock;
+    private final SystemTrailerBlock systemTrailerBlock;
 
 
     public SwiftMessage(BasicHeaderBlock basicHeaderBlock,
@@ -139,10 +137,10 @@ public class SwiftMessage {
 
         this.basicHeaderBlock = basicHeaderBlock;
         this.applicationHeaderBlock = applicationHeaderBlock;
-        this.userHeaderBlock = Optional.ofNullable(userHeaderBlock);
+        this.userHeaderBlock = userHeaderBlock;
         this.textBlock = textBlock;
-        this.userTrailerBlock = Optional.ofNullable(userTrailerBlock);
-        this.systemTrailerBlock = Optional.ofNullable(systemTrailerBlock);
+        this.userTrailerBlock = userTrailerBlock;
+        this.systemTrailerBlock = systemTrailerBlock;
     }
 
     public BasicHeaderBlock getBasicHeaderBlock() {
@@ -153,7 +151,7 @@ public class SwiftMessage {
         return applicationHeaderBlock;
     }
 
-    public Optional<UserHeaderBlock> getUserHeaderBlock() {
+    public UserHeaderBlock getUserHeaderBlock() {
         return userHeaderBlock;
     }
 
@@ -161,11 +159,11 @@ public class SwiftMessage {
         return textBlock;
     }
 
-    public Optional<UserTrailerBlock> getUserTrailerBlock() {
+    public UserTrailerBlock getUserTrailerBlock() {
         return userTrailerBlock;
     }
 
-    public Optional<SystemTrailerBlock> getSystemTrailerBlock() {
+    public SystemTrailerBlock getSystemTrailerBlock() {
         return systemTrailerBlock;
     }
 
@@ -173,15 +171,15 @@ public class SwiftMessage {
         StringBuilder contentBuilder = new StringBuilder();
         contentBuilder.append(swiftTextOf(basicHeaderBlock));
         contentBuilder.append(swiftTextOf(applicationHeaderBlock));
-        if (userHeaderBlock.isPresent()) {
-            contentBuilder.append(swiftTextOf(userHeaderBlock.get()));
+        if (userHeaderBlock != null) {
+            contentBuilder.append(swiftTextOf(userHeaderBlock));
         }
         contentBuilder.append(swiftTextOf(textBlock));
-        if (userTrailerBlock.isPresent()) {
-            contentBuilder.append(swiftTextOf(userTrailerBlock.get()));
+        if (userTrailerBlock != null) {
+            contentBuilder.append(swiftTextOf(userTrailerBlock));
         }
-        if (systemTrailerBlock.isPresent()) {
-            contentBuilder.append(swiftTextOf(systemTrailerBlock.get()));
+        if (systemTrailerBlock != null) {
+            contentBuilder.append(swiftTextOf(systemTrailerBlock));
         }
         return contentBuilder.toString();
     }
